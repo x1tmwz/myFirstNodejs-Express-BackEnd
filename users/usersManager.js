@@ -1,7 +1,5 @@
 
 const mysql = require('mysql');
-
-
 const connection = mysql.createConnection({
     host: 'database.cdzhujgnp8xm.us-east-2.rds.amazonaws.com',
     port: 3306,
@@ -11,17 +9,6 @@ const connection = mysql.createConnection({
 });
 
 module.exports = {
-    getUserById: (id) => {
-        return new Promise((resolve, reject) => {
-            connection.connect();
-            connection.query(`SELECT * from users where id=${id}`, function (error, results, fields) {
-                connection.end();
-                if (error) reject(error);
-                resolve(results[0]);
-
-            });
-        });
-    },
     addUser: async ({
         account_name,
         account_password,
@@ -33,7 +20,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             connection.connect();
             connection.query(`INSERT INTO users ( account_name,account_password,first_name, last_name, gender, age)
-                                VALUES ('${account_name}','${account_password}','${first_name}', '${last_name}', ${gender}, ${age});`, function (error, results, fields) {
+                                VALUES ('${account_name}','${account_password}','${first_name}', '${last_name}', ${gender}, ${age});`, 
+                                function (error, results, fields) {
                     connection.end();
                     if (error) reject(error);
                     console.log(results);

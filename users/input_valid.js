@@ -3,10 +3,14 @@ const regExInputValid = {account_name:/^[a-zA-Z0-9]+$/,account_password:/^[a-zA-
 const validLength={account_name:30,new_password:30,account_password:30,first_name:30,last_name:30,gender:1,age:3}
 function isFiledsExices(regEx,keys)
 {
+    let word ='';
     for(let key of keys){
-        if(!regEx.test(key))
-           return false
+        word += key +',';
     }
+    console.log(word);
+    console.log(regEx);
+    if(!regEx.test(word))
+           return false;
     return true;
 }
 function isValid(regEx,detail,obj,length)
@@ -37,7 +41,6 @@ const isInputValid = (objDetails,regEx)=>{
        for(let detail of inputKeys) 
         if(!objDetails[detail])
         {
-            isAllDetailsIsFound =false;
             inputValid.error = "one of the input is missing";
             inputValid.valid = false;
             break;
@@ -57,10 +60,6 @@ const isInputValid = (objDetails,regEx)=>{
 
 module.exports ={
   isInputValid: (userDetails,regEx) => {
-    return new Promise((resolve, reject) => {
-       const valid = isInputValid(userDetails,regEx);
-       console.log(valid);
-       resolve(valid);
-    });
+    return  isInputValid(userDetails,regEx);
  },
 }

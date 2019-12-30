@@ -1,11 +1,9 @@
-const express = require('/express');
+const express = require('express');
 const router = express.Router();
-const validitionFuncs = require('./users/input_valid.js');
-const usersManager = require('./users/usersManager');
+const validitionFuncs = require('../users/input_valid');
+const usersManager = require('../users/usersManager');
 const jwt = require('jsonwebtoken');
-const regLogInFields =/account_name|account_password/;
-
-
+const regLogInFields =/account_name,account_password,/;
 
 router.post('/logIn', (req, res) => {
     const userDetails = req.body;
@@ -37,3 +35,4 @@ router.post('/logIn', (req, res) => {
     
     
 });
+module.exports = router;

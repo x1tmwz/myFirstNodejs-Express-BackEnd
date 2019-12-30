@@ -1,13 +1,13 @@
-const express = require('/express');
+const express = require('express');
 const router = express.Router();
-const validitionFuncs = require('./users/input_valid.js');
-const usersManager = require('./users/usersManager');
+const validitionFuncs = require('../users/input_valid');
+const usersManager = require('../users/usersManager');
 const regAccountFields=/account_name|account_password|first_name|last_name|gender|age/;
-const regUpdatePasswordFields=/account_name|account_password|new_password/;
+const regUpdatePasswordFields=/account_name,account_password,new_password,/;
 
 router.post('/updatePassword', (req, res) => {
     const userDetails = req.body;
-    validitionFuncs.isInputValid(userDetails,regUpdatePasswordFields).then((validbody)=>{
+     validitionFuncs.isInputValid(userDetails,regUpdatePasswordFields).then((validbody)=>{
         if(validbody.valid){
             usersManager.chanegPassword(userDetails).then((userDetails) => {
                 console.log(userDetails);
@@ -37,3 +37,4 @@ router.post('/updateUserInfo', (req, res) => {
          
     })
 })
+module.exports = router;
