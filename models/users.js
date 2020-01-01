@@ -31,16 +31,16 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
-    create_at: {
+    createdAt: {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP')
     },
-    update_at: {
+    updatedAt: {
       type: DataTypes.DATE,
       allowNull: true
     },
-    delete_at: {
+    deletedAt: {
       type: DataTypes.DATE,
       allowNull: true
     }

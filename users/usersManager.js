@@ -1,6 +1,8 @@
 const users = require('../sequelizeFolder/seuqlize');
+const hashsalt = require('./HashSalt');
+
 module.exports = {
-    addUser: ({
+    addUser: async({
         account_name,
         account_password,
         first_name,
@@ -8,22 +10,22 @@ module.exports = {
         gender,
         age
     }) => {
-        return new Promise((resolve, reject) => {
-            connection.connect();
-            connection.query(`INSERT INTO users ( account_name,account_password,first_name, last_name, gender, age)
-                                VALUES ('${account_name}','${account_password}','${first_name}', '${last_name}', ${gender}, ${age});`, 
-                                function (error, results, fields) {
-                    connection.end();
-                    if (error) reject(error);
-                    console.log(results);
-                    resolve({
-                        data: `${first_name} is add succesfully`,
-                        error: null
-                    });
+        let {salt,hashValue} = hashsalt.encrypt(account_password);
+        let newUser= await users.create({
+            hash:hashValue,
+            salt,
+            account_name,
+            first_name,
+            last_name,
+            gender,
+            age
+        }).catch((err)=>console.log(err));
+        return newUser; 
 
-                });
+       
+                
 
-        })
+        
     },
     chanegPassword:({
         account_name,

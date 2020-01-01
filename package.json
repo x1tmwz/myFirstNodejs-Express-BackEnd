@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "sequelize": "sequelize-auto -o ./models -d UserInfoDB  -h database.cdzhujgnp8xm.us-east-2.rds.amazonaws.com -u admin -p 3306 -x 12345678"
   },
   "author": "",
   "license": "ISC",

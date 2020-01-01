@@ -6,12 +6,11 @@ const regValidtionReqObj=/account_name,account_password,first_name,last_name,gen
 
 
 
-router.post('/Createaccount',async (req, res) => {
+router.post('/Createaccount',async(req, res) => {
     const userDetails = req.body;
     let validobj = validitionFuncs.isInputValid(userDetails,regValidtionReqObj);
         if(validobj.valid){
-            
-               let users = await usersManager.addUser(userDetails).catch((err)=>{console.log(err)});
+               let users = await usersManager.addUser(userDetails).catch((err)=>{console.log(err)})
                console.log(users);
                res.send(JSON.stringify(users));
             }

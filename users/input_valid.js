@@ -7,8 +7,6 @@ function isFiledsExices(regEx,keys)
     for(let key of keys){
         word += key +',';
     }
-    console.log(word);
-    console.log(regEx);
     if(!regEx.test(word))
            return false;
     return true;

@@ -1,29 +1,29 @@
-var CryptoJS = require("crypto-js");
-function genrateSecretKey()
-{
-    let result ='';
-    const charaters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    let charactersLength = characters.length;
-    for ( let i = 0; i < 5; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+const crypto = require('crypto');
+function genrateSecretKey() {
+    let result = '';
+    const charaters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let charactersLength = charaters.length;
+    for (let i = 0; i < 5; i++) {
+        result += charaters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
 }
-function encrypt(password){
-    let serectWord = genrateSecretKey();
-    let cryptotext = CryptoJS.AES.encrypt(password,serectWord);
-    return {serectWord,cryptotext};
+function encrypt(password) {
+    let salt = genrateSecretKey();
+    let hash = crypto.createHmac('sha512', salt);
+    hash.update(password);
+    let hashValue = hash.digest('hex');
+    return { salt, hashValue };
 }
-function decrypt(password,serectWord,cryptotext)
-{
-    let decrypttext = CryptoJS.AES(password,serectWord);
-    if(decrypttext === cryptotext)
+function decrypt(password, salt, hash) {
+    let newhash = crypto.createHmac('sha512', salt);
+    newhash.update(password);
+    let value = newhash.digest('hex');
+    if (hash === value)
         return true;
-
     return false;
-
 }
-module.exports={
+module.exports = {
     encrypt,
-    decrypt
+    decrypt,
 }
