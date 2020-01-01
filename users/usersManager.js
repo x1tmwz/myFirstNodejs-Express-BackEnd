@@ -1,26 +1,4 @@
-const usersTable = require('../models/users');
-/*const Sequelize = require('sequelize');
-const sequelize = new Sequelize('UserInfoDB', 'admin', '12345678', {
-    host: 'database.cdzhujgnp8xm.us-east-2.rds.amazonaws.com',
-    dialect: 'mysql'
-  });
-  sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });*/
-/*const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host: 'database.cdzhujgnp8xm.us-east-2.rds.amazonaws.com',
-    port: 3306,
-    user: 'admin',
-    password: '12345678',
-    database: 'UserInfoDB'
-});*/
-
+const users = require('../sequelizeFolder/seuqlize');
 module.exports = {
     addUser: ({
         account_name,
