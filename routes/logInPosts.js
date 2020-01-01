@@ -5,13 +5,14 @@ const usersManager = require('../users/usersManager');
 const jwt = require('jsonwebtoken');
 const regLogInFields =/account_name,account_password,/;
 
-router.post('/logIn', (req, res) => {
+router.post('/logIn',async (req, res) => {
     const userDetails = req.body;
-    let validbody = validitionFuncs.isInputValid(userDetails,regLogInFields).then((validbody)=>{
-        if(validbody.valid){
-            let isUserIsSign = usersManager.isThisUserIsSign(userDetails).then((isUserIsSign) => {
+    let validbody = validitionFuncs.isInputValid(userDetails,regLogInFields);
+        if(validbody.valid)
+        {
+            let UserIsSign = await usersManager.isThisUserIsSign(userDetails).catch((err)=>{console.log(err)});
                 let responseObj = {};
-                if (!isUserIsSign) 
+                if (!UserIsSign) 
                 {
                     res.statusCode = 403;
                     responseObj.data = null;
@@ -24,7 +25,7 @@ router.post('/logIn', (req, res) => {
                         res.send(JSON.stringify(token));
                     });
                 }
-            })
+            
         }
         else{
             res.statusCode = 403;
@@ -34,5 +35,5 @@ router.post('/logIn', (req, res) => {
     });
     
     
-});
+
 module.exports = router;

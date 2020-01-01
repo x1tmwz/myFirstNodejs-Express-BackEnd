@@ -5,14 +5,15 @@ const usersManager = require('../users/usersManager');
 const regAccountFields=/account_name|account_password|first_name|last_name|gender|age/;
 const regUpdatePasswordFields=/account_name,account_password,new_password,/;
 
-router.post('/updatePassword', (req, res) => {
+router.post('/updatePassword', async(req, res) => {
     const userDetails = req.body;
-     validitionFuncs.isInputValid(userDetails,regUpdatePasswordFields).then((validbody)=>{
-        if(validbody.valid){
-            usersManager.chanegPassword(userDetails).then((userDetails) => {
-                console.log(userDetails);
-                res.send(JSON.stringify(userDetails));
-            });
+    let validbody= validitionFuncs.isInputValid(userDetails,regUpdatePasswordFields)
+        if(validbody.valid)
+        {
+            let changeobj = await usersManager.chanegPassword(userDetails).catch((err)=>{console.log(err)});
+            console.log(changeobj);
+            res.send(JSON.stringify(changeobj)); 
+            
         }
         else{
             res.statusCode = 403;
@@ -20,15 +21,15 @@ router.post('/updatePassword', (req, res) => {
         }
        
     });
-})
-router.post('/updateUserInfo', (req, res) => {
+
+router.post('/updateUserInfo',async (req, res) => {
     const userDetails = req.body;
-    validitionFuncs.isInputValid(userDetails,regAccountFields).then((validbody)=>{
+    let validbody = validitionFuncs.isInputValid(userDetails,regAccountFields)
         if(validbody.valid){
-                usersManager.changeUserInfo(userDetails).then((userDetails) => {
-                console.log(userDetails);
-                res.send(JSON.stringify(userDetails));
-            });
+                let updateobj =await usersManager.changeUserInfo(userDetails).catch((err)=>{console.log(err)});
+                console.log(updateobj);
+                res.send(JSON.stringify(updateobj));
+            
         }
         else{
             res.statusCode = 403;
@@ -36,5 +37,4 @@ router.post('/updateUserInfo', (req, res) => {
         }
          
     })
-})
 module.exports = router;
