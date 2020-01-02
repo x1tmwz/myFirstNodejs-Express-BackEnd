@@ -4,7 +4,7 @@ const sequelize = new Sequelize('UserInfoDB', 'admin', '12345678', {
     host: 'database.cdzhujgnp8xm.us-east-2.rds.amazonaws.com',
     dialect: 'mysql'
   });
-  sequelize
+  const connect= sequelize
   .authenticate()
   .then(() => {
     console.log('Connection has been established successfully.');

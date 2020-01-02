@@ -10,14 +10,11 @@ router.post('/logIn',async (req, res) => {
     let validbody = validitionFuncs.isInputValid(userDetails,regLogInFields);
         if(validbody.valid)
         {
-            let UserIsSign = await usersManager.isThisUserIsSign(userDetails).catch((err)=>{console.log(err)});
-                let responseObj = {};
-                if (!UserIsSign) 
+             let UserIsSign = await usersManager.isThisUserIsSign(userDetails).catch((err)=>{console.log(err)});
+                if (!UserIsSign.valid) 
                 {
                     res.statusCode = 403;
-                    responseObj.data = null;
-                    responseObj.error = "user not found"
-                    res.send(JSON.stringify(responseObj));
+                    res.send(JSON.stringify(UserIsSign));
                 } 
                 else
                 {

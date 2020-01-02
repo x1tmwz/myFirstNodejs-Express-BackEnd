@@ -10,7 +10,7 @@ router.post('/Createaccount',async(req, res) => {
     const userDetails = req.body;
     let validobj = validitionFuncs.isInputValid(userDetails,regValidtionReqObj);
         if(validobj.valid){
-               let users = await usersManager.addUser(userDetails).catch((err)=>{console.log(err)})
+               let users = await usersManager.addUser(userDetails).catch((err)=>{console.log(err)}) 
                console.log(users);
                res.send(JSON.stringify(users));
             }

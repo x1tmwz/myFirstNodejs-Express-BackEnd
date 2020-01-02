@@ -1,4 +1,4 @@
-const users = require('../sequelizeFolder/seuqlize');
+const table = require('../sequelizeFolder/seuqlize');
 const hashsalt = require('./HashSalt');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
         age
     }) => {
         let {salt,hashValue} = hashsalt.encrypt(account_password);
-        let newUser= await users.create({
+        let newUser= await table.create({
             hash:hashValue,
             salt,
             account_name,
@@ -27,27 +27,31 @@ module.exports = {
 
         
     },
-    chanegPassword:({
+    chanegPassword:async({
         account_name,
         account_password,
         new_password
     }) => {
-        return new Promise((resolve, reject) => {
-            connection.connect();
-            connection.query(`UPDATE users SET account_password='${new_password}' WHERE account_name='${account_name}' AND account_password='${account_password}'`, function (error, results, fields) {
-                    connection.end();
-                    if (error) reject(error);
-                    console.log(results);
-                    resolve({
-                        data: `${account_name} your password as changed`,
-                        error: null
-                    });
+       let user = await table.findAll({
+            where:{
+                account_name
+            }
+        }).catch((err)=>{console.log(err)});
+        if(!user[0])
+           return {error:"this account name not existent"}
+        if(hashsalt.decrypt(account_password,user[0].salt,user[0].hash)){
+            let {salt,hashValue} = hashsalt.encrypt(new_password);
+            let updateuser = await table.update({hash:hashValue,salt},{where:{account_name}}).catch((err)=>{console.log(err)});
+            return updateuser;
 
-                });
+        }
+        return {error:"your enter wrong password"};
 
-        })
+        
+
+        
     },
-    changeUserInfo: ({
+    changeUserInfo: async({
         account_name,
         account_password,
         first_name,
@@ -56,35 +60,46 @@ module.exports = {
         age,
 
     }) => {
-        return new Promise((resolve, reject) => {
-            connection.connect();
-            connection.query(`UPDATE users SET first_name='${first_name}', last_name='${last_name}', gender= '${gender}', age='${age}' WHERE account_name='${account_name}' AND account_password='${account_password}'`, function (error, results, fields) {
-                    connection.end();
-                    if (error) reject(error);
-                    console.log(results);
-                    resolve({
-                        data: `${account_name} you personal info updated`,
-                        error: null
-                    });
+        let user = await table.findAll({
+            where:{
+                account_name,
+            }
+        }).catch((err)=>{console.log(err)});
+        if(!user[0])
+           return {error:"this account name not existent"}
+        if(hashsalt.decrypt(account_password,user[0].salt,user[0].hash)){
+            let updateuser = await table.update({first_name,last_name,gender,age},{where:{account_name}}).catch((err)=>{console.log(err)});
+            return updateuser;
 
-                });
+        }
+        return {error:"your enter wrong password"};
 
-        })
     },
-    isThisUserIsSign: ({
+    isThisUserIsSign: async ({
         account_name,
         account_password,
     }) => {
-        return new Promise((resolve, reject) => {
-            connection.connect();
-            connection.query(`SELECT * from users WHERE account_name='${account_name}'AND account_password='${account_password}' `, function (error, results, fields) {
-                    connection.end();
-                    if (error)reject(error);
-                    resolve(results[0]);
+        let responObj ={};
+        let user = await table.findAll({
+            where:{
+                account_name,
+            }
+        }).catch((err)=>{console.log(err)});
+        if(!user[0]){
+            responObj.message="user name is not found";
+            responObj.valid = false;
+            return responObj;
+        }
+        if(hashsalt.decrypt(account_password,user[0].salt,user[0].hash)){
+            responObj.message="you are now log in";
+            responObj.valid =true;
+            return responObj;
+        }
+        responObj.message ="you enter wrong password";
+        responObj.valid = false;
+        return responObj;
 
-                });
-
-        })
-    },
+        
+    }
 
 }

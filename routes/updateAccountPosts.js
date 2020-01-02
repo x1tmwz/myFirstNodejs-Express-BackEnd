@@ -11,9 +11,11 @@ router.post('/updatePassword', async(req, res) => {
         if(validbody.valid)
         {
             let changeobj = await usersManager.chanegPassword(userDetails).catch((err)=>{console.log(err)});
-            console.log(changeobj);
-            res.send(JSON.stringify(changeobj)); 
-            
+            if(changeobj[0])
+               res.send(JSON.stringify({message:"your password has update"}));
+            else
+               res.send(JSON.stringify(changeobj));
+            1
         }
         else{
             res.statusCode = 403;
@@ -27,8 +29,9 @@ router.post('/updateUserInfo',async (req, res) => {
     let validbody = validitionFuncs.isInputValid(userDetails,regAccountFields)
         if(validbody.valid){
                 let updateobj =await usersManager.changeUserInfo(userDetails).catch((err)=>{console.log(err)});
-                console.log(updateobj);
-                res.send(JSON.stringify(updateobj));
+                if(updateobj[0])res.send(JSON.stringify({message:"your info is update"}));
+                else
+                   res.send(JSON.stringify(updateobj));
             
         }
         else{
